@@ -1,6 +1,7 @@
 package NotificationsSystem;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 public class User implements Observer{
@@ -45,6 +46,21 @@ public class User implements Observer{
             unreadUrgentAlertsList.remove(readAlert);
 
         else unreadInformativeAlertsList.remove(readAlert);
+    }
+
+    public void deleteExpiredAlerts(){
+        Iterator<Alert> controlExpiredIterator = unreadInformativeAlertsList.iterator();
+        while(controlExpiredIterator.hasNext()){
+            Alert alertToContronl = controlExpiredIterator.next();
+            if(alertToContronl.getExpirationFlag()) unreadInformativeAlertsList.remove(alertToContronl);
+        }
+
+        controlExpiredIterator = unreadUrgentAlertsList.iterator();
+        while(controlExpiredIterator.hasNext()){
+            Alert alertToContronl = controlExpiredIterator.next();
+            if(alertToContronl.getExpirationFlag()) unreadUrgentAlertsList.remove(alertToContronl);
+        }
+
     }
 
 

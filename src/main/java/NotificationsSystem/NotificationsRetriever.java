@@ -1,6 +1,6 @@
 package NotificationsSystem;
 
-import java.util.Iterator;
+import java.util.ArrayList;
 import java.util.List;
 
 public class NotificationsRetriever {
@@ -10,65 +10,53 @@ public class NotificationsRetriever {
         this.miNotifier = miNotifier;
     }
 
-    public String getEspecificUserUnreadAlerts(String userName){
-        String returnText = "";
+    public List<Alert> getEspecificUserUnreadAndUnexpiredAlerts(String params){
+   
+        String userName = getUserNameOrTopicFromParam(params);
+        List<Alert> returnList = new ArrayList<Alert>();
         User especificUser = miNotifier.getUserByName(userName);
         
         if(especificUser != null){
+            especificUser.deleteExpiredAlerts();
             List<Alert> unreadUrgentAlerts = especificUser.getUnreadUrgentAlertsList();
             List<Alert> unreadInformativeAlerts = especificUser.getUnreadInformativeAlertsList();
-            returnText = "Alertas para el usuario - " + userName;
-            returnText += getTextForUserAlerts(unreadUrgentAlerts);
-            returnText += getTextForUserAlerts(unreadInformativeAlerts);
+            returnList.addAll(unreadUrgentAlerts);
+            returnList.addAll(unreadInformativeAlerts);
         }
 
-        return returnText;
+        return returnList;
     }
 
-    public String getTopicUnreadAlerts(String topic){
-        String returnText = "";
+    public List<Alert> getTopicUnexpiredAlerts(String params){
+        
+        String topic = getUserNameOrTopicFromParam(params);
+        List<Alert> returnList = new ArrayList<Alert>();
         NotificationsDispatcher especificTopic = (NotificationsDispatcher) miNotifier.getSubjectByTopic(topic);
         
         if(especificTopic != null){
+            especificTopic.deleteExpiredAlerts();
             List<Alert> sendUrgentAlerts = especificTopic.getSendUrgentAlertsList();
             List<Alert> sendInformativeAlerts = especificTopic.getSendInformativeAlertsList();
-            returnText = "Alertas para el topico - " + topic;
-            returnText += getTextForTopicAlerts(sendUrgentAlerts);
-            returnText += getTextForTopicAlerts(sendInformativeAlerts);
+            returnList.addAll(sendUrgentAlerts);
+            returnList.addAll(sendInformativeAlerts);
         }
 
-        return returnText;
+        return returnList;
     }
 
-    private String getTextForUserAlerts(List<Alert> alertsList){
-        String returnText = "";
+    private String getUserNameOrTopicFromParam(String param){
+        // TODO obtener el nombre de usuario o de topico desde el parameto
+        String returnNameText = "";
 
-        Iterator<Alert> alertIterator = alertsList.iterator();
-
-        while(alertIterator.hasNext()){
-            Alert nextAlert = alertIterator.next();
-            if(!nextAlert.getExpirationFlag()) 
-                returnText += nextAlert.getType() + " - " + nextAlert.getTopic() 
-                            + " - " + nextAlert.getText() + "\n";
-        }
-
-        return returnText;
+        if(!param.equals("")&&param.contains("=")){
+            /* se espera un parametro de la forma name=NombreDeUsuarioOTOpico
+            * por lo que el texto a retornar estara en la posicion 1 del split
+            * al dividir el texto con el caracter '='
+            */
+            returnNameText = param.split("=",2)[1];
+            returnNameText = returnNameText.replace(" ", ""); // quito espacios en blanco
+        } 
+        return returnNameText;
     }
-
-    private String getTextForTopicAlerts(List<Alert> alertsList){
-        String returnText = "";
-
-        Iterator<Alert> alertIterator = alertsList.iterator();
-
-        while(alertIterator.hasNext()){
-            Alert nextAlert = alertIterator.next();
-            if(!nextAlert.getExpirationFlag()) 
-                returnText += nextAlert.getType() + " - " + nextAlert.getTopic() 
-                            + " - " + nextAlert.getText() + " - Para: " + nextAlert.getAlertedUsers() + "\n";
-        }
-
-        return returnText;
-    }
-
 
 }

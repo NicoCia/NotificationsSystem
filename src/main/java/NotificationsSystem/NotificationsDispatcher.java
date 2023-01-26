@@ -33,6 +33,21 @@ public class NotificationsDispatcher implements Subject {
         else sendInformativeAlertsList.add(newAlert);
     }
 
+    public void deleteExpiredAlerts(){
+        Iterator<Alert> controlExpiredIterator = sendInformativeAlertsList.iterator();
+        while(controlExpiredIterator.hasNext()){
+            Alert alertToContronl = controlExpiredIterator.next();
+            if(alertToContronl.getExpirationFlag()) sendInformativeAlertsList.remove(alertToContronl);
+        }
+
+        controlExpiredIterator = sendUrgentAlertsList.iterator();
+        while(controlExpiredIterator.hasNext()){
+            Alert alertToContronl = controlExpiredIterator.next();
+            if(alertToContronl.getExpirationFlag()) sendUrgentAlertsList.remove(alertToContronl);
+        }
+
+    }
+
     @Override
     public void registerObserver(Observer o) {
         observersList.add(o);
