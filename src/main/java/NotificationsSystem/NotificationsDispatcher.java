@@ -18,6 +18,21 @@ public class NotificationsDispatcher implements Subject {
         this.miNotifier = miNotifier;
     }
 
+    public List<Alert> getSendUrgentAlertsList() {
+        return sendUrgentAlertsList;
+    }
+
+    public List<Alert> getSendInformativeAlertsList() {
+        return sendInformativeAlertsList;
+    }
+
+    public void addNewAlertToList(Alert newAlert){
+        if(newAlert.getType().equals("urgente")){
+            sendUrgentAlertsList.add(newAlert);
+        }
+        else sendInformativeAlertsList.add(newAlert);
+    }
+
     @Override
     public void registerObserver(Observer o) {
         observersList.add(o);
@@ -36,10 +51,7 @@ public class NotificationsDispatcher implements Subject {
         Alert newAlert = miNotifier.getLastAlert();
         Iterator<Observer> observersIterator = observersList.iterator();
 
-        if(newAlert.getType().equals("urgente")){
-            sendUrgentAlertsList.add(newAlert);
-        }
-        else sendInformativeAlertsList.add(newAlert);
+        addNewAlertToList(newAlert);
         
         if(newAlert.getAlertedUsers().equals("all")){
             

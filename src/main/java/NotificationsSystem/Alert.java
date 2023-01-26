@@ -34,5 +34,9 @@ public class Alert {
     public void setExpirationFlag(Boolean ExpirationFlag) {
         this.ExpirationFlag = ExpirationFlag;
     }
+
+    public Boolean getExpirationFlag() {
+        return ExpirationFlag;
+    }
     
 }

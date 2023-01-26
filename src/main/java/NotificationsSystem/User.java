@@ -5,16 +5,16 @@ import java.util.List;
 
 public class User implements Observer{
     private String name;
-    private List<Alert> unreadUrgentAlerts;
-    private List<Alert> unreadInformativeAlerts;
+    private List<Alert> unreadUrgentAlertsList;
+    private List<Alert> unreadInformativeAlertsList;
     private Notifier miNotifier;
     
 
     public User(String name, Notifier miNotifier) {
         this.name = name;
         this.miNotifier = miNotifier;
-        unreadUrgentAlerts = new ArrayList<Alert> ();
-        unreadInformativeAlerts = new ArrayList<Alert> ();
+        unreadUrgentAlertsList = new ArrayList<Alert> ();
+        unreadInformativeAlertsList = new ArrayList<Alert> ();
     }
 
     
@@ -23,28 +23,28 @@ public class User implements Observer{
     }
 
 
-    public List<Alert> getUnreadUrgentAlerts() {
-        return unreadUrgentAlerts;
+    public List<Alert> getUnreadUrgentAlertsList() {
+        return unreadUrgentAlertsList;
     }
 
 
-    public List<Alert> getUnreadInformativeAlerts() {
-        return unreadInformativeAlerts; 
+    public List<Alert> getUnreadInformativeAlertsList() {
+        return unreadInformativeAlertsList; 
     }
 
     public void addNewUrgentAlert(Alert newUrgentAlert){
-        unreadUrgentAlerts.add(0,newUrgentAlert);
+        unreadUrgentAlertsList.add(0,newUrgentAlert);
     }
 
     public void addNewInformativeAlert(Alert newInformativeAlert){
-        unreadInformativeAlerts.add(0,newInformativeAlert);
+        unreadInformativeAlertsList.add(0,newInformativeAlert);
     }
 
     public void markAlertAsRead(Alert readAlert){
         if(readAlert.getType().equals("urgente")) 
-            unreadUrgentAlerts.remove(readAlert);
+            unreadUrgentAlertsList.remove(readAlert);
 
-        else unreadInformativeAlerts.remove(readAlert);
+        else unreadInformativeAlertsList.remove(readAlert);
     }
 
 
@@ -53,9 +53,9 @@ public class User implements Observer{
         Alert newAlert = miNotifier.getLastAlert();
 
         if(newAlert.getType().equals("urgente")){
-            unreadUrgentAlerts.add(newAlert);
+            unreadUrgentAlertsList.add(newAlert);
         }
-        else unreadInformativeAlerts.add(newAlert);
+        else unreadInformativeAlertsList.add(newAlert);
         
     }
 

@@ -59,5 +59,13 @@ public class Notifier {
         }
         else return null;
     }
+
+    public Subject getSubjectByTopic(String topic){
+        if(topicsObserversMap.containsKey(topic)){
+            return topicsObserversMap.get(topic);
+        }
+
+        else return null;
+    }
     
 }
