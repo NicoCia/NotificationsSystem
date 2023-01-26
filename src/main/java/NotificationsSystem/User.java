@@ -3,14 +3,16 @@ package NotificationsSystem;
 import java.util.ArrayList;
 import java.util.List;
 
-public class User {
+public class User implements Observer{
     private String name;
     private List<Alert> unreadUrgentAlerts;
     private List<Alert> unreadInformativeAlerts;
+    private Notifier miNotifier;
     
 
-    public User(String name) {
+    public User(String name, Notifier miNotifier) {
         this.name = name;
+        this.miNotifier = miNotifier;
         unreadUrgentAlerts = new ArrayList<Alert> ();
         unreadInformativeAlerts = new ArrayList<Alert> ();
     }
@@ -44,5 +46,25 @@ public class User {
 
         else unreadInformativeAlerts.remove(readAlert);
     }
+
+
+    @Override
+    public void update() {
+        Alert newAlert = miNotifier.getLastAlert();
+
+        if(newAlert.getType().equals("urgente")){
+            unreadUrgentAlerts.add(newAlert);
+        }
+        else unreadInformativeAlerts.add(newAlert);
+        
+    }
+
+
+    @Override
+    public String toString() {
+        return getName();
+    }
+
+    
     
 }
