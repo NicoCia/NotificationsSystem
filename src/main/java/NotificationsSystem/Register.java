@@ -1,5 +1,8 @@
 package NotificationsSystem;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Register {
     private Notifier miNotifier;
 
@@ -7,8 +10,18 @@ public class Register {
         this.miNotifier = miNotifier;
     }
 
-    public void createNewRegistration(){
-        // TODO implement method
+    public void createNewRegistration(String params){
+
+        List<String> paramsValuesList = getParamsValuesListFromString(params);
+        if(paramsValuesList.size()>1){
+            String name = paramsValuesList.get(1);
+            String clase = paramsValuesList.get(0);
+            switch(clase){
+                case "topic": registerNewTopic(name); break;
+                case "user": registerUser(name); break;
+                default: break;
+            }
+        }
     }
 
     public Boolean registerUser(String newUserName){
@@ -21,7 +34,23 @@ public class Register {
         return miNotifier.addNewTopic(newTopString);
     }
 
-    public Boolean registerUserToTopic(String suscriberUserName, String topic){
+    public Boolean registerUserToTopic(String params){
+        String suscriberUserName="", topic="";
         return miNotifier.suscribeUserToTopic(suscriberUserName, topic);
+    }
+
+    private List<String> getParamsValuesListFromString(String params){
+        String[] camp_valuesList = params.split(" -", 10);
+        ArrayList<String> returnParamsValuesList = new ArrayList<>();
+
+        for(String param: camp_valuesList){
+            param = param.replace(" ", ""); //quito espacios en blanco
+            if(param.contains("=")){
+                String[] camp_valueList = param.split("=", 2); // el indice sero sera el campor y el indice 1 sera el valor a asignar
+                if(camp_valueList[0].equals("class")) returnParamsValuesList.add(0, camp_valueList[1]);
+                else returnParamsValuesList.add(camp_valueList[1]);
+            }
+        }
+        return returnParamsValuesList;
     }
 }
