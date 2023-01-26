@@ -1,3 +1,9 @@
+# IDE's files
+.vscode
+
+#Maven files
+*.xml
+
 # Compiled class file
 *.class
 
