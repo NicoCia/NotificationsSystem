@@ -41,11 +41,31 @@ public class User implements Observer{
         unreadInformativeAlertsList.add(0,newInformativeAlert);
     }
 
-    public void markAlertAsRead(Alert readAlert){
-        if(readAlert.getType().equals("urgente")) 
-            unreadUrgentAlertsList.remove(readAlert);
+    public Boolean markAlertAsRead(long readAlertIndex){
+        Alert readAlert = getAlertByIndex(readAlertIndex);
 
-        else unreadInformativeAlertsList.remove(readAlert);
+        if(readAlert != null){
+            if(readAlert.getType().equals("urgente")) 
+                unreadUrgentAlertsList.remove(readAlert);
+
+            else unreadInformativeAlertsList.remove(readAlert);
+
+            return true;
+        }
+
+        return false;
+    }
+
+    public Alert getAlertByIndex(long alertIndex){
+        List<Alert> lokingAlertForIndexList = new ArrayList<Alert>();
+        lokingAlertForIndexList.addAll(unreadUrgentAlertsList);
+        lokingAlertForIndexList.addAll(unreadInformativeAlertsList);
+        Iterator<Alert> alertsIterator = lokingAlertForIndexList.iterator();
+        while(alertsIterator.hasNext()){
+            Alert alertToCheck = alertsIterator.next();
+            if(alertToCheck.getAlertIndex() == alertIndex) return alertToCheck;
+        }
+        return null;
     }
 
     public void deleteExpiredAlerts(){

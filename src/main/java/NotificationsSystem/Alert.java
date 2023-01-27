@@ -6,12 +6,14 @@ public class Alert {
     private String text;
     private String alertedUsers;
     private Boolean ExpirationFlag;
+    private long alertIndex;
 
-    public Alert(String topic, String type, String text, String alertedUsers) {
+    public Alert(String topic, String type, String text, String alertedUsers, long alertIndex) {
         this.topic = topic;
         this.type = type;
         this.text = text;
         this.alertedUsers = alertedUsers;
+        this.alertIndex = alertIndex;
         ExpirationFlag = false;
     }
 
@@ -31,12 +33,16 @@ public class Alert {
         return alertedUsers;
     }
 
+    public long getAlertIndex() {
+        return alertIndex;
+    }
+
     public void setExpirationFlag(Boolean ExpirationFlag) {
         this.ExpirationFlag = ExpirationFlag;
     }
 
     public Boolean getExpirationFlag() {
         return ExpirationFlag;
-    }
+    }  
     
 }

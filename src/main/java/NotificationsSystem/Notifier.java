@@ -7,16 +7,18 @@ import java.util.HashMap;
 public class Notifier {
     private HashMap<String, User> registeredUsersMap;
     private HashMap<String, Subject> topicsObserversMap;
-    private Alert lastAlert; 
+    private Alert lastAlert;
+    private long alertsIndex;
     
     public Notifier() {
         registeredUsersMap = new HashMap<String, User>();
         topicsObserversMap = new HashMap<String, Subject>();
-        
+        alertsIndex = 0;
     }
 
-    public void createNewNotification(){
+    public void createNewNotification(String params){
         // TODO implement method
+
     }
 
     public Boolean addNewTopic(String topic){
@@ -38,15 +40,49 @@ public class Notifier {
         else return false;
     }
 
-    public Boolean suscribeUserToTopic (String userName, String topic){
-        
-        if(registeredUsersMap.containsKey(userName) && topicsObserversMap.containsKey(topic)){
-            User suscriberUser = registeredUsersMap.get(userName);
-            Subject notificationDispatcherOfTopic = topicsObserversMap.get(topic);
-            notificationDispatcherOfTopic.registerObserver(suscriberUser);
-            return true;
+    public Boolean suscribeUserToTopic (String params){
+        String userName="", topic="";
+        HashMap<String, String> paramsValuesMap = getParamsValuesMapFromString(params);
+        if(paramsValuesMap.containsKey("user")&&paramsValuesMap.containsKey("topic")){
+            userName = paramsValuesMap.get("user");
+            topic = paramsValuesMap.get("topic");            
+            if(registeredUsersMap.containsKey(userName) && topicsObserversMap.containsKey(topic)){
+                User suscriberUser = registeredUsersMap.get(userName);
+                Subject notificationDispatcherOfTopic = topicsObserversMap.get(topic);
+                notificationDispatcherOfTopic.registerObserver(suscriberUser);
+                return true;
+            }
         }
-        else return false;
+        return false;
+    }
+
+    public Boolean markUserAlertAsRead(String params){
+        String userName=""; 
+        long alertIndex;
+        HashMap<String, String> paramsValuesMap = getParamsValuesMapFromString(params);
+        if(paramsValuesMap.containsKey("user")&&paramsValuesMap.containsKey("alertIndex")){
+            userName = paramsValuesMap.get("user");
+            alertIndex = Long.parseLong(paramsValuesMap.get("alertIndex"));
+            if(registeredUsersMap.containsKey(userName)){
+                User subscriberUser = registeredUsersMap.get(userName);
+                return subscriberUser.markAlertAsRead(alertIndex);
+            }
+        }
+        return false;
+    }
+
+    private HashMap<String, String> getParamsValuesMapFromString(String params){
+        String[] paramsList = params.split(" -", 10);
+        HashMap<String, String> returnParamsValuesMap = new HashMap<String, String>();
+
+        for(String param: paramsList){
+            param = param.replace(" ", ""); //quito espacios en blanco
+            if(param.contains("=")){
+                String[] camp_valueList = param.split("=", 2); // el indice sero sera el campo/key y el indice 1 sera el valor a asignar
+                returnParamsValuesMap.put(camp_valueList[0], camp_valueList[1]);
+            }
+        }
+        return returnParamsValuesMap;
     }
 
     public Alert getLastAlert() {

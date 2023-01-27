@@ -34,16 +34,11 @@ public class Register {
         return miNotifier.addNewTopic(newTopString);
     }
 
-    public Boolean registerUserToTopic(String params){
-        String suscriberUserName="", topic="";
-        return miNotifier.suscribeUserToTopic(suscriberUserName, topic);
-    }
-
     private List<String> getParamsValuesListFromString(String params){
-        String[] camp_valuesList = params.split(" -", 10);
+        String[] paramsList = params.split(" -", 10);
         ArrayList<String> returnParamsValuesList = new ArrayList<>();
 
-        for(String param: camp_valuesList){
+        for(String param: paramsList){
             param = param.replace(" ", ""); //quito espacios en blanco
             if(param.contains("=")){
                 String[] camp_valueList = param.split("=", 2); // el indice sero sera el campor y el indice 1 sera el valor a asignar
