@@ -72,13 +72,29 @@ public class User implements Observer{
         Iterator<Alert> controlExpiredIterator = unreadInformativeAlertsList.iterator();
         while(controlExpiredIterator.hasNext()){
             Alert alertToContronl = controlExpiredIterator.next();
-            if(alertToContronl.getExpirationFlag()) unreadInformativeAlertsList.remove(alertToContronl);
+            Boolean alertToControlExpirationFlag;
+            try {
+                alertToContronl.getConcurrentSemaphore().acquire();
+                alertToControlExpirationFlag = alertToContronl.getExpirationFlag();
+                alertToContronl.getConcurrentSemaphore().release();
+                if(alertToControlExpirationFlag) unreadInformativeAlertsList.remove(alertToContronl);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
 
         controlExpiredIterator = unreadUrgentAlertsList.iterator();
         while(controlExpiredIterator.hasNext()){
             Alert alertToContronl = controlExpiredIterator.next();
-            if(alertToContronl.getExpirationFlag()) unreadUrgentAlertsList.remove(alertToContronl);
+            Boolean alertToControlExpirationFlag;
+            try {
+                alertToContronl.getConcurrentSemaphore().acquire();
+                alertToControlExpirationFlag = alertToContronl.getExpirationFlag();
+                alertToContronl.getConcurrentSemaphore().release();
+                if(alertToControlExpirationFlag) unreadUrgentAlertsList.remove(alertToContronl);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
 
     }

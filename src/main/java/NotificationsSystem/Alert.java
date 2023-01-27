@@ -1,11 +1,14 @@
 package NotificationsSystem;
 
+import java.util.concurrent.Semaphore;
+
 public class Alert {
     private String topic;
     private String type;
     private String text;
     private String alertedUsers;
     private Boolean expirationFlag;
+    private Semaphore concurrentSemaphore;
     private long alertIndex;
 
     public Alert(String topic, String type, String alertedUsers, long alertIndex) {
@@ -13,7 +16,8 @@ public class Alert {
         this.type = type;
         this.alertedUsers = alertedUsers;
         this.alertIndex = alertIndex;
-        expirationFlag = false;
+        this.concurrentSemaphore = new Semaphore(1,true);
+        this.expirationFlag = false;
     }
 
     public String getTopic() {
@@ -35,15 +39,21 @@ public class Alert {
     public long getAlertIndex() {
         return alertIndex;
     }
+
+    public Semaphore getConcurrentSemaphore() {
+        return concurrentSemaphore;
+    } 
+    
     public Boolean getExpirationFlag() {
         return expirationFlag;
-    } 
+    }
+     
     public void setExpirationFlag(Boolean ExpirationFlag) {
         this.expirationFlag = ExpirationFlag;
     }
 
     public void setText(String text) {
         this.text = text;
-    } 
+    }
     
 }

@@ -37,13 +37,29 @@ public class NotificationsDispatcher implements Subject {
         Iterator<Alert> controlExpiredIterator = sendInformativeAlertsList.iterator();
         while(controlExpiredIterator.hasNext()){
             Alert alertToContronl = controlExpiredIterator.next();
-            if(alertToContronl.getExpirationFlag()) sendInformativeAlertsList.remove(alertToContronl);
+            Boolean alertToControlExpirationFlag;
+            try {
+                alertToContronl.getConcurrentSemaphore().acquire();
+                alertToControlExpirationFlag = alertToContronl.getExpirationFlag();
+                alertToContronl.getConcurrentSemaphore().release();
+                if(alertToControlExpirationFlag) sendInformativeAlertsList.remove(alertToContronl);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
 
         controlExpiredIterator = sendUrgentAlertsList.iterator();
         while(controlExpiredIterator.hasNext()){
             Alert alertToContronl = controlExpiredIterator.next();
-            if(alertToContronl.getExpirationFlag()) sendUrgentAlertsList.remove(alertToContronl);
+            Boolean alertToControlExpirationFlag;
+            try {
+                alertToContronl.getConcurrentSemaphore().acquire();
+                alertToControlExpirationFlag = alertToContronl.getExpirationFlag();
+                alertToContronl.getConcurrentSemaphore().release();
+                if(alertToControlExpirationFlag) sendUrgentAlertsList.remove(alertToContronl);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
 
     }

@@ -45,7 +45,6 @@ public class NotificationsRetriever {
     }
 
     private String getUserNameOrTopicFromParam(String param){
-        // TODO obtener el nombre de usuario o de topico desde el parameto
         String returnNameText = "";
 
         if(!param.equals("")&&param.contains("=")){

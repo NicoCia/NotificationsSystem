@@ -1,4 +1,7 @@
 package NotificationsSystem;
+
+import java.util.List;
+
 public class App {
     public static void main(String[] args) throws Exception {
         Notifier miNotifier = new Notifier();
@@ -24,6 +27,17 @@ public class App {
                 case "recovertopicunexpiredalerts": miRetriever.getTopicUnexpiredAlerts(params);                    break;
 
                 default: break;
+            }
+        }
+
+        List<Thread> threadsToInterruptAndJoin = miNotifier.getExpirationsControllersThreadsList();
+        
+        for(Thread thread : threadsToInterruptAndJoin){
+            try{
+                thread.interrupt();
+                thread.join();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
         }
         

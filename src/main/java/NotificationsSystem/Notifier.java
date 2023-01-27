@@ -1,23 +1,26 @@
 package NotificationsSystem;
 
-// import java.util.ArrayList;
+import java.util.ArrayList;
 import java.util.HashMap;
-// import java.util.List;
+import java.util.List;
 
 public class Notifier {
     private HashMap<String, User> registeredUsersMap;
     private HashMap<String, Subject> topicsObserversMap;
+    private List<Thread> expirationsControllersThreadsList;
+    private MyThreadFactory threadFactory;
     private Alert lastAlert;
     private long alertsIndex;
     
     public Notifier() {
-        registeredUsersMap = new HashMap<String, User>();
-        topicsObserversMap = new HashMap<String, Subject>();
-        alertsIndex = 0;
+        this.registeredUsersMap = new HashMap<String, User>();
+        this.topicsObserversMap = new HashMap<String, Subject>();
+        this.expirationsControllersThreadsList = new ArrayList<Thread>();
+        this.threadFactory = new MyThreadFactory("NotificationsSystem");
+        this.alertsIndex = 0;
     }
 
     public Boolean createNewNotification(String params){
-        // TODO implement method
         String alertedUser, topic, type;
         HashMap<String, String> paramsValuesMap = getParamsValuesMapFromString(params);
         if(paramsValuesMap.containsKey("user")&&paramsValuesMap.containsKey("topic")&&paramsValuesMap.containsKey("type")){
@@ -28,6 +31,22 @@ public class Notifier {
             if(paramsValuesMap.containsKey("text")) newAlert.setText(paramsValuesMap.get("text"));
 
             if((registeredUsersMap.containsKey(alertedUser)||alertedUser.equals("all"))&&topicsObserversMap.containsKey(topic)){
+
+                if(paramsValuesMap.containsKey("expirationdate")){
+                    String newAlertExpirationDateTimeString = paramsValuesMap.get("expirationdate");
+                    
+                    if(ExpiredNotificationsController.checkValidDateTime(newAlertExpirationDateTimeString)){
+                        
+                        ExpiredNotificationsController newAlertExpirationController = new ExpiredNotificationsController(newAlertExpirationDateTimeString, newAlert);
+                        Thread newAlertExpirationControllerThread = threadFactory.newThread(newAlertExpirationController);
+                        expirationsControllersThreadsList.add(newAlertExpirationControllerThread);
+                        newAlertExpirationControllerThread.start();
+                    }
+                    else {
+                        System.out.println("se va");
+                        return false;
+                    }
+                }
                 lastAlert=newAlert;
                 Subject notificationDispatcherOfTopic = topicsObserversMap.get(topic);
                 notificationDispatcherOfTopic.notifyObservers();
@@ -100,7 +119,6 @@ public class Notifier {
                 returnParamsValuesMap.put(camp_valueList[0], camp_valueList[1]);
             }
         }
-        System.out.println(returnParamsValuesMap);
         return returnParamsValuesMap;
     }
 
@@ -121,6 +139,10 @@ public class Notifier {
         }
 
         else return null;
+    }
+
+    public List<Thread> getExpirationsControllersThreadsList() {
+        return expirationsControllersThreadsList;
     }
     
 }
