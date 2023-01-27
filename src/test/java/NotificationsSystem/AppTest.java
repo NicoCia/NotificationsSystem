@@ -170,11 +170,4 @@ public class AppTest
         assertTrue(result);
     }
 
-    // @Test
-    // public void testExpiredNotifcationsController6(){
-    //     String testDateTimeString = "2007-12-31T10:15:30";
-    //     LocalDateTime testDateTime = LocalDateTime.parse(testDateTimeString);
-    //     assertTrue(tExpiredNotificationsController.getDurationBetweenNowAndExpirationDateTime(testDateTime).isNegative());
-    // }
-
 }
