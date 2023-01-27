@@ -15,6 +15,7 @@ public class AppTest
     String testTopicString = "test topic";
     Notifier testNotifier = new Notifier();
     User testUser = new User(testUserName, testNotifier);
+    App testApp = new App();
     
     /**
      * Testeo que el nuevo user retorne el nombre asignado correctamente
@@ -64,4 +65,20 @@ public class AppTest
         testNotifier.addNewTopic(testTopicString);
         assertFalse(testNotifier.addNewTopic(testTopicString));
     }
+
+    @Test
+    public void createNotificationWithBasicParamsShouldReturnTrue(){
+        String testParams = "topic=" + testTopicString + " -user=all  -type=urgente";
+        testNotifier.addNewTopic(testTopicString);
+        assertTrue(testNotifier.createNewNotification(testParams));
+    }
+
+    @Test
+    public void createNotificationWithoutTopicParamShouldReturnFalse(){
+        String testParams = "user=all  -type=urgente";
+        assertFalse(testNotifier.createNewNotification(testParams));
+    }
+
+    
+
 }

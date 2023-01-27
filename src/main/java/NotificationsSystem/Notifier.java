@@ -16,7 +16,7 @@ public class Notifier {
         alertsIndex = 0;
     }
 
-    public void createNewNotification(String params){
+    public Boolean createNewNotification(String params){
         // TODO implement method
         String alertedUser, topic, type;
         HashMap<String, String> paramsValuesMap = getParamsValuesMapFromString(params);
@@ -26,18 +26,21 @@ public class Notifier {
             type = paramsValuesMap.get("type");
             Alert newAlert = new Alert(topic, type, alertedUser, alertsIndex);
             if(paramsValuesMap.containsKey("text")) newAlert.setText(paramsValuesMap.get("text"));
-            
+
             if((registeredUsersMap.containsKey(alertedUser)||alertedUser.equals("all"))&&topicsObserversMap.containsKey(topic)){
                 lastAlert=newAlert;
                 Subject notificationDispatcherOfTopic = topicsObserversMap.get(topic);
                 notificationDispatcherOfTopic.notifyObservers();
                 alertsIndex++;
+                return true;
             }   
         }
+        return false;
 
     }
 
-    public Boolean addNewTopic(String topic){
+    public Boolean addNewTopic(String topicText){
+        String topic = topicText.replace(" ", ""); //quito espacios en blanco
         if(!topicsObserversMap.containsKey(topic)){
             NotificationsDispatcher newNotificationDispatcherForNewTopic = new NotificationsDispatcher(Notifier.this);
             topicsObserversMap.put(topic, newNotificationDispatcherForNewTopic);
@@ -47,7 +50,6 @@ public class Notifier {
     }
 
     public Boolean addNewUser(User user){
-
         if(!registeredUsersMap.containsKey(user.getName()))
         {
             registeredUsersMap.put(user.getName(), user);
@@ -98,6 +100,7 @@ public class Notifier {
                 returnParamsValuesMap.put(camp_valueList[0], camp_valueList[1]);
             }
         }
+        System.out.println(returnParamsValuesMap);
         return returnParamsValuesMap;
     }
 
