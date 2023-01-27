@@ -20,3 +20,14 @@ Suscribe al usuario del campo "user" al topico indicado por "topic"
 - *recoverUserPendingAlerts -user=\<user name\>* : Permite obtener todas las alertas no expiradas de un usuario que aún no ha leído, ordenadas primero las Urgentes y luego las informativas de la más reciente a la más antigua.
 
 - *recoverTopicUnexpiredAlerts -name=\<topic name\>* : Permite obtener todas las alertas no expiradas para un tema (primero las Urgentes y luego las Informativas de la más reciente a la más antigua). Se informa para cada alerta si es para todos los usuarios o para uno específico.
+
+
+Supuestos aplicados:
+
+- las notificaciones leidas o expiradas no cumplen funcion alguna en el sistema por lo que "marcarlas como leidas" en realidad son borradas de la estructura de datos.
+
+- al enviar una alerta a un usuario en especifico el mismo debe ser un usuario registrado pero no es necesario que este suscrito al topico de la alerta
+
+- la informacion de si una alerta fue enviada a un usuario o a todos se encuentra almacenado en un campo especifico de cada alerta por lo que es posible recuperar dicha informacion leyendo el campo
+
+- no se especificaba en que formato deberia ser devueltas las consultas no expiradas y no leidas por topico o usuario por lo que las mismas son devueltas en una estructura del tipo <ArrayList\<\>>
