@@ -30,4 +30,4 @@ Supuestos aplicados:
 
 - la informacion de si una alerta fue enviada a un usuario o a todos se encuentra almacenado en un campo especifico de cada alerta por lo que es posible recuperar dicha informacion leyendo el campo
 
-- no se especificaba en que formato deberia ser devueltas las consultas no expiradas y no leidas por topico o usuario por lo que las mismas son devueltas en una estructura del tipo <ArrayList\<\>>
+- no se especificaba en que formato deberia ser devueltas las consultas no expiradas y no leidas por topico o usuario por lo que las mismas son devueltas en una estructura del tipo  `ArrayList<>`
