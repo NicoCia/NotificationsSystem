@@ -43,7 +43,7 @@ public class Notifier {
                         newAlertExpirationControllerThread.start();
                     }
                     else {
-                        System.out.println("se va");
+                        
                         return false;
                     }
                 }

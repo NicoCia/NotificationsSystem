@@ -49,7 +49,7 @@ public class ExpiredNotificationsController implements Runnable {
     @Override
     public void run() {
         Duration alertExpirationDuration = getDurationBetweenNowAndExpirationDateTime(alertExpirationDateTime);
-        System.out.println("hasta aca si1");
+        
         if(!alertExpirationDuration.isNegative()){
             try {
                 Thread.sleep(alertExpirationDuration.toMillis());
