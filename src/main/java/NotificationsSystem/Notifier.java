@@ -18,6 +18,22 @@ public class Notifier {
 
     public void createNewNotification(String params){
         // TODO implement method
+        String alertedUser, topic, type;
+        HashMap<String, String> paramsValuesMap = getParamsValuesMapFromString(params);
+        if(paramsValuesMap.containsKey("user")&&paramsValuesMap.containsKey("topic")&&paramsValuesMap.containsKey("type")){
+            alertedUser = paramsValuesMap.get("user");
+            topic = paramsValuesMap.get("topic");
+            type = paramsValuesMap.get("type");
+            Alert newAlert = new Alert(topic, type, alertedUser, alertsIndex);
+            if(paramsValuesMap.containsKey("text")) newAlert.setText(paramsValuesMap.get("text"));
+            
+            if((registeredUsersMap.containsKey(alertedUser)||alertedUser.equals("all"))&&topicsObserversMap.containsKey(topic)){
+                lastAlert=newAlert;
+                Subject notificationDispatcherOfTopic = topicsObserversMap.get(topic);
+                notificationDispatcherOfTopic.notifyObservers();
+                alertsIndex++;
+            }   
+        }
 
     }
 
